@@ -1,0 +1,60 @@
+/to-do/{to-do-id}:
+  get:
+    tags:
+      - To-Do
+    summary: Get a specific to-do task by UUID
+    parameters:
+      - name: to-do-id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: The UUID of the to-do task to retrieve
+        example: "e17cf7b0-7a1d-4d2e-9405-e9a4177c3c44"
+    responses:
+      200:
+        description: To-do task details
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                  format: uuid
+                  description: Unique identifier of the task
+                  example: "e17cf7b0-7a1d-4d2e-9405-e9a4177c3c44"
+                title:
+                  type: string
+                  description: Title of the task
+                  example: "обновил 4"
+                description:
+                  type: string
+                  description: Description of the task
+                  example: "готово."
+                notifyAt:
+                  type: string
+                  format: date-time
+                  description: Notification time of the task
+                  example: "2025-10-09T17:00:00.000Z"
+                createdAt:
+                  type: string
+                  format: date-time
+                  description: Creation timestamp
+                  example: "2025-01-23T17:00:00.000Z"
+                updatedAt:
+                  type: string
+                  format: date-time
+                  description: Last update timestamp
+                  example: "2025-01-23T18:00:00.000Z"
+                isCompleted:
+                  type: boolean
+                  description: Completion status of the task
+                  example: true
+      400:
+        $ref: "#/definitions/400"
+        404:
+          $ref: "#/definitions/404"
+        422:
+          $ref: "#/definitions/422"

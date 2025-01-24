@@ -1,0 +1,81 @@
+/to-do/edit:
+  patch:
+    tags:
+      - To-Do
+    summary: Edit an existing to-do task
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - id
+            properties:
+              id:
+                type: string
+                format: uuid
+                description: Unique identifier of the task
+                example: "e17cf7b0-7a1d-4d2e-9405-e9a4177c3c44"
+              title:
+                type: string
+                description: Updated title of the task
+                example: "обновил 4"
+              description:
+                type: string
+                description: Updated description of the task
+                example: "готово."
+              notifyAt:
+                type: string
+                format: date-time
+                description: Updated notification time for the task
+                example: "2025-10-09T17:00:00.000Z"
+              isCompleted:
+                type: boolean
+                description: Updated completion status of the task
+                example: true
+    responses:
+      200:
+        description: Task updated successfully
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                  description: Unique identifier of the task
+                  example: "e17cf7b0-7a1d-4d2e-9405-e9a4177c3c44"
+                title:
+                  type: string
+                  description: Updated title of the task
+                  example: "обновил 4"
+                description:
+                  type: string
+                  description: Updated description of the task
+                  example: "готово."
+                notifyAt:
+                  type: string
+                  format: date-time
+                  description: Updated notification time for the task
+                  example: "2025-10-09T17:00:00.000Z"
+                createdAt:
+                  type: string
+                  format: date-time
+                  description: Creation timestamp
+                  example: "2025-01-23T17:00:00.000Z"
+                updatedAt:
+                  type: string
+                  format: date-time
+                  description: Last update timestamp
+                  example: "2025-01-23T18:00:00.000Z"
+                isCompleted:
+                  type: boolean
+                  description: Updated completion status of the task
+                  example: true
+      400:
+        $ref: "#/definitions/400"
+      404:
+        $ref: "#/definitions/404"
+      422:
+        $ref: "#/definitions/422"

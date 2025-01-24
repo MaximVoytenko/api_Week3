@@ -1,0 +1,109 @@
+/to-do:
+  get:
+    tags:
+      - To-Do
+    summary: Get a list of to-do tasks with search and filters
+    parameters:
+      - name: search
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Search tasks by title
+        example: "обновил 4"
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+        description: Number of tasks to return
+        example: 10
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+        description: Number of tasks to skip before starting to collect the result set
+        example: 0
+      - name: sortBy
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+            - title
+            - createdAt
+            - notifyAt
+        description: Field to sort the tasks by
+        example: "title"
+      - name: sortOrder
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+            - asc
+            - desc
+        description: Sort order (ascending or descending)
+        example: "asc"
+      - name: isCompleted
+        in: query
+        required: false
+        schema:
+          type: boolean
+        description: Filter tasks by completion status
+        example: true
+    responses:
+      200:
+        description: List of to-do tasks
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                tasks:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        format: uuid
+                        description: Unique identifier of the task
+                        example: "e17cf7b0-7a1d-4d2e-9405-e9a4177c3c44"
+                      title:
+                        type: string
+                        description: Title of the task
+                        example: "обновил 4"
+                      description:
+                        type: string
+                        description: Description of the task
+                        example: "готово."
+                      notifyAt:
+                        type: string
+                        format: date-time
+                        description: Notification time of the task
+                        example: "2025-10-09T17:00:00.000Z"
+                      createdAt:
+                        type: string
+                        format: date-time
+                        description: Creation timestamp
+                        example: "2025-01-23T17:00:00.000Z"
+                      updatedAt:
+                        type: string
+                        format: date-time
+                        description: Last update timestamp
+                        example: "2025-01-23T18:00:00.000Z"
+                      isCompleted:
+                        type: boolean
+                        description: Completion status of the task
+                        example: true
+
+      400:
+        $ref: "#/definitions/400"
+      404:
+        $ref: "#/definitions/404"
+      422:
+        $ref: "#/definitions/422"

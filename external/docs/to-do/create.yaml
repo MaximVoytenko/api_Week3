@@ -1,0 +1,71 @@
+/to-do/create:
+  post:
+    tags:
+      - To-Do
+    summary: Create a new to-do task
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - title
+              - description
+            properties:
+              title:
+                type: string
+                description: Title of the task
+                example: "задача 4"
+              description:
+                type: string
+                description: Detailed description of the task
+                example: "задание 4"
+              notifyAt:
+                type: string
+                format: date-time
+                description: Notification time for the task
+                example: "2025-10-09T17:00:00.000Z"
+    responses:
+      200:
+        description: Task created successfully
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                  description: Unique identifier of the task
+                  example: "123e4567-e89b-12d3-a456-426614174000"
+                title:
+                  type: string
+                  description: Title of the task
+                  example: "задача 4"
+                description:
+                  type: string
+                  description: Detailed description of the task
+                  example: "задание 4"
+                notifyAt:
+                  type: string
+                  format: date-time
+                  description: Notification time for the task
+                  example: "2025-10-09T17:00:00.000Z"
+                createdAt:
+                  type: string
+                  format: date-time
+                  description: Creation timestamp
+                  example: "2025-01-23T17:00:00.000Z"
+                updatedAt:
+                  type: string
+                  format: date-time
+                  description: Last update timestamp
+                  example: "2025-01-23T17:00:00.000Z"
+                isCompleted:
+                  type: boolean
+                  description: Completion status of the task
+                  example: false
+      400:
+        $ref: "#/definitions/400"
+      422:
+        $ref: "#/definitions/422"
