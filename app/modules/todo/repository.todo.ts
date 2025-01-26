@@ -1,6 +1,7 @@
 import { type Insertable, type Kysely, Transaction } from "kysely";
 import { DB, Objectives } from "../../common/types/kysely/db.type";
 import { editSchema } from "./schemas/edit.schema";
+import { ListSchema } from "./schemas/list.schema";
 
 type InsertableUserRowType = Insertable<Objectives>;
 
@@ -8,49 +9,32 @@ export async function insert(con: Kysely<DB> | Transaction<DB>, entity: Insertab
     return await con.insertInto("objectives").returningAll().values(entity).executeTakeFirstOrThrow();
 }
 
-export async function edit(db: Kysely<DB> | Transaction<DB>, todo: Partial<editSchema>) {
+export async function edit(db: Kysely<DB> | Transaction<DB>, todo: Partial<editSchema>, id: string) {
     return db
         .updateTable("objectives")
         .set({
-            title: todo.title,
-            description: todo.description,
-            notifyAt: todo.notifyAt ? new Date(todo.notifyAt) : null,
-            updatedAt: new Date(),
-            isCompleted: todo.isCompleted
+            ...todo,
+            updatedAt: new Date()
         })
-        .where("id", "=", todo.id as string)
+        .where("id", "=", id)
         .returningAll()
         .executeTakeFirst();
 }
 
-export async function getList(
-    con: Kysely<DB>,
-    {
-        search,
-        sortBy = "createdAt",
-        sortOrder = "asc",
-        limit = 10,
-        offset = 0,
-        isCompleted
-    }: {
-        search?: string;
-        sortBy?: "title" | "createdAt" | "notifyAt";
-        sortOrder?: "asc" | "desc";
-        limit?: number;
-        offset?: number;
-        isCompleted?: boolean;
-    }
-) {
-    let query = con.selectFrom("objectives").selectAll();
+export async function getList(db: Kysely<DB>, filter: Partial<ListSchema>) {
+    let query = db.selectFrom("objectives").selectAll();
 
-    if (search) {
-        query = query.where("title", "like", `%${search}%`);
+    if (filter.search) {
+        query = query.where("title", "ilike", `%${filter.search}%`);
     }
 
-    if (isCompleted !== undefined) {
-        query = query.where("isCompleted", "=", isCompleted);
+    if (filter.isCompleted !== undefined) {
+        query = query.where("isCompleted", "=", Boolean(filter.isCompleted));
     }
-    query = query.orderBy(sortBy, sortOrder).limit(limit).offset(offset);
+    query = query
+        .orderBy(filter.sortBy ?? "createdAt", filter.sortOrder)
+        .limit(filter.limit as number)
+        .offset(filter.offset as number);
 
     return await query.execute();
 }

@@ -5,8 +5,8 @@ const schema = z.object({
     search: z.string().optional(),
     sortBy: z.enum(["title", "createdAt", "notifyAt"]).optional(),
     sortOrder: z.enum(["asc", "desc"]).optional(),
-    limit: z.string().min(1).optional(),
-    offset: z.string().min(0).optional(),
+    limit: z.coerce.number().min(1).optional(),
+    offset: z.coerce.number().min(0).optional(),
     isCompleted: z.string().optional()
 });
 

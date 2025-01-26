@@ -4,7 +4,7 @@ import { z } from "zod";
 const schema = z.object({
     title: z.string().min(1).max(127),
     description: z.string(),
-    notifyAt: z.string().optional()
+    notifyAt: z.coerce.date().optional()
 });
 
 export type createSchema = z.infer<typeof schema>;
