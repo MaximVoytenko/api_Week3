@@ -7,7 +7,10 @@ const schema = z.object({
     sortOrder: z.enum(["asc", "desc"]).optional(),
     limit: z.coerce.number().min(1).optional(),
     offset: z.coerce.number().min(0).optional(),
-    isCompleted: z.string().optional()
+    isCompleted: z
+        .enum(["true", "false"])
+        .transform((value) => value === "true")
+        .optional()
 });
 
 export type ListSchema = z.infer<typeof schema>;

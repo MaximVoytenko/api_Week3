@@ -11,7 +11,6 @@ export async function up(db: Kysely<any>) {
         .addColumn("createdAt", "timestamp", (col) => col.defaultTo(new Date()))
         .addColumn("updatedAt", "timestamp")
         .addColumn("isCompleted", "boolean")
-
         .execute();
 }
 

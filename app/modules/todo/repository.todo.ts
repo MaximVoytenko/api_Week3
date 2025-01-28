@@ -1,15 +1,12 @@
-import { type Insertable, type Kysely, Transaction } from "kysely";
+import { type Insertable, type Kysely, Transaction, Updateable } from "kysely";
 import { DB, Objectives } from "../../common/types/kysely/db.type";
-import { editSchema } from "./schemas/edit.schema";
 import { ListSchema } from "./schemas/list.schema";
 
-type InsertableUserRowType = Insertable<Objectives>;
-
-export async function insert(con: Kysely<DB> | Transaction<DB>, entity: InsertableUserRowType) {
+export async function insert(con: Kysely<DB> | Transaction<DB>, entity: Insertable<Objectives>) {
     return await con.insertInto("objectives").returningAll().values(entity).executeTakeFirstOrThrow();
 }
 
-export async function edit(db: Kysely<DB> | Transaction<DB>, todo: Partial<editSchema>, id: string) {
+export async function edit(db: Kysely<DB> | Transaction<DB>, todo: Updateable<Objectives>, id: string) {
     return db
         .updateTable("objectives")
         .set({
@@ -21,7 +18,7 @@ export async function edit(db: Kysely<DB> | Transaction<DB>, todo: Partial<editS
         .executeTakeFirst();
 }
 
-export async function getList(db: Kysely<DB>, filter: Partial<ListSchema>) {
+export async function getList(db: Kysely<DB>, filter: ListSchema) {
     let query = db.selectFrom("objectives").selectAll();
 
     if (filter.search) {
@@ -29,7 +26,7 @@ export async function getList(db: Kysely<DB>, filter: Partial<ListSchema>) {
     }
 
     if (filter.isCompleted !== undefined) {
-        query = query.where("isCompleted", "=", Boolean(filter.isCompleted));
+        query = query.where("isCompleted", "=", filter.isCompleted);
     }
     query = query
         .orderBy(filter.sortBy ?? "createdAt", filter.sortOrder)
@@ -40,5 +37,5 @@ export async function getList(db: Kysely<DB>, filter: Partial<ListSchema>) {
 }
 
 export async function getById(con: Kysely<DB> | Transaction<DB>, id: string) {
-    return await con.selectFrom("objectives").selectAll().where("id", "=", id).executeTakeFirstOrThrow();
+    return await con.selectFrom("objectives").selectAll().where("id", "=", id).executeTakeFirst();
 }
