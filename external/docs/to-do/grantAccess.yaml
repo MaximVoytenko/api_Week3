@@ -1,0 +1,54 @@
+/todos/{id}/share:
+  post:
+    tags:
+      - To-Do
+    summary: Share access to a task
+    description: Grants access to a specific to-do task to another user by their user ID.
+    parameters:
+      - name: id
+        in: path
+        required: true
+        description: Unique identifier of the task (UUID)
+        schema:
+          type: string
+          format: uuid
+          example: "f1f6732a-d40e-455f-877b-eaa16f052edb"
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - userId
+            properties:
+              userId:
+                type: string
+                format: uuid
+                description: Unique identifier of the user to share access with
+                example: "8b9c6ade-5cb4-4c70-966d-763cdac4cd34"
+    responses:
+      200:
+        description: Access granted successfully
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: "Access to the task has been successfully shared with the user."
+      400:
+        $ref: "#/definitions/400"
+      404:
+        description: Task or user not found
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: "Task or user not found"
+      422:
+        $ref: "#/definitions/422"

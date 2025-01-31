@@ -1,0 +1,54 @@
+/todos/{id}/listGrants:
+  get:
+    tags:
+      - To-Do
+    summary: List users with access to a task
+    description: Returns a list of users who have been granted access to a specific to-do task.
+    parameters:
+      - name: id
+        in: path
+        required: true
+        description: Unique identifier of the task (UUID)
+        schema:
+          type: string
+          format: uuid
+          example: "f1f6732a-d40e-455f-877b-eaa16f052edb"
+    responses:
+      200:
+        description: List of users with access
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                users:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      Id:
+                        type: string
+                        format: uuid
+                        description: Unique identifier of the user
+                        example: "bd8debaf-b4ac-448d-9a55-208ec623d3a2"
+                      userId:
+                        type: string
+                        description: Name of the user
+                        example: "a74c3920-647e-4df7-93aa-6587e117b571"
+                      ObjectivesId:
+                        type: string
+                        format: email
+                        description: Email of the user
+                        example: "f1f6732a-d40e-455f-877b-eaa16f052edb"
+      400:
+        $ref: "#/definitions/400"
+      404:
+        description: Task not found
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: "Task not found"

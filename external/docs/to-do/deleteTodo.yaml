@@ -1,0 +1,30 @@
+/todos/{id}:
+  delete:
+    tags:
+      - To-Do
+    summary: Delete a task by ID
+    description: Deletes a task by its unique identifier (UUID).
+    parameters:
+      - name: id
+        in: path
+        required: true
+        description: Unique identifier of the task (UUID)
+        schema:
+          type: string
+          format: uuid
+          example: "7bcbdad9-e850-4a35-a1fb-fe2ed0306775"
+    responses:
+      204:
+        description: Task successfully deleted
+      400:
+        $ref: "#/definitions/400"
+      404:
+        description: Task not found
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: "Task not found"

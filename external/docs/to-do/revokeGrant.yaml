@@ -1,0 +1,54 @@
+/todos/{id}/revoke:
+  delete:
+    tags:
+      - To-Do
+    summary: Revoke access from a user
+    description: Revokes access to a specific to-do task from a user by their user ID.
+    parameters:
+      - name: id
+        in: path
+        required: true
+        description: Unique identifier of the task (UUID)
+        schema:
+          type: string
+          format: uuid
+          example: "f1f6732a-d40e-455f-877b-eaa16f052edb"
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - userId
+            properties:
+              userId:
+                type: string
+                format: uuid
+                description: Unique identifier of the user to revoke access from
+                example: "8b9c6ade-5cb4-4c70-966d-763cdac4cd34"
+    responses:
+      200:
+        description: Access revoked successfully
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: "Access revoked successfully ."
+      400:
+        $ref: "#/definitions/400"
+      404:
+        description: Task not found
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: "Task not found"
+      422:
+        $ref: "#/definitions/422"
