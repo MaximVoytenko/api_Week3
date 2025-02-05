@@ -11,14 +11,9 @@ import { ListSchema } from "./schemas/list.schema";
 import { revokeParamSchema } from "./schemas/revokeGrant.schema";
 
 export async function create(req: FastifyRequest<{ Body: createSchema }>, rep: FastifyReply) {
-    let date = null;
-    if (req.body.notifyAt != null && req.body.notifyAt != undefined) {
-        date = new Date(req.body.notifyAt);
-    }
     const todo = {
         ...req.body,
         creatorId: req.user.id,
-        notifyAt: date,
         isCompleted: false
     };
     const insertedTodo = await todoRepository.insert(sqlCon, todo);

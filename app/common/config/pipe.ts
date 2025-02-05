@@ -10,8 +10,12 @@ export async function AppErrorPipe(err: any, req: FastifyRequest, reply: Fastify
         const errors = err.issues.map(({ code: type, path: stack, message }) => ({ type, stack, message }));
         return reply.code(HttpStatusCode.UNPROCESSABLE_ENTITY).send({ errors });
     }
-
     if (err instanceof CustomException) {
+        if (err.error === "ACCESS_DENIED") {
+            return reply.status(err.status).send({
+                message: err.publicMessage.message || "An error occurred"
+            });
+        }
         parentLogger.error({ url: req.url, method: req.method }, "Route");
 
         if (req.body) parentLogger.error(req.body, "Body: ");
