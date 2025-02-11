@@ -48,8 +48,8 @@ export async function deleteById(con: Kysely<DB>, id: string) {
     return await con.deleteFrom("objectives").where("id", "=", id).execute();
 }
 
-export async function getGrants(con: Kysely<DB>, id: string) {
-    return await con.selectFrom("user-objective-shares").select("userId").where("ObjectivesId", "=", id).execute();
+export async function getGrants(con: Kysely<DB>, id: string, userID: string) {
+    return await con.selectFrom("user-objective-shares").select("userId").where("ObjectivesId", "=", id).where("userId", "=", userID).execute();
 }
 
 export async function grantAccess(con: Kysely<DB>, entity: Insertable<UserObjectiveShares>) {

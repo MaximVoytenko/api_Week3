@@ -1,6 +1,5 @@
-import fastifyAuth from "@fastify/auth";
 import type { FastifyInstance } from "fastify";
-import { accessGrantedMiddleware, isOwnerMiddleware } from "../middlewares";
+import { accessGrantedMiddleware, isOwnerMiddleware } from "../../common/middlewares/middlewares";
 import * as todoController from "./controller.todo";
 import { createFSchema } from "./schemas/create.schema";
 import { editFSchema, paramSchema } from "./schemas/edit.schema";
@@ -9,7 +8,6 @@ import { listFSchema } from "./schemas/list.schema";
 import { revokeParamFSchema } from "./schemas/revokeGrant.schema";
 
 export const todoRouter = async (app: FastifyInstance) => {
-    await app.register(fastifyAuth);
     app.post("/", { schema: createFSchema }, todoController.create);
     app.patch("/:id", { schema: editFSchema, preHandler: app.auth([isOwnerMiddleware]) }, todoController.edit);
     app.get("/:id", { preHandler: app.auth([isOwnerMiddleware, accessGrantedMiddleware]) }, todoController.getById);

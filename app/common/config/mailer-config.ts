@@ -1,4 +1,5 @@
 import nodemailer from "nodemailer";
+import { logger } from "./pino-plugin";
 
 const transporter = nodemailer.createTransport({
     service: "yandex",
@@ -21,9 +22,8 @@ export async function sendEmail(options: EmailOptions) {
             from: `"Your App" <${process.env.EMAIL_USER}>`,
             ...options
         });
-        console.log("Email sent successfully");
     } catch (error) {
-        console.error("Error sending email:", error);
+        logger.error("Error sending email:", error);
         throw error;
     }
 }

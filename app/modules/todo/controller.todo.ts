@@ -1,7 +1,8 @@
 import type { FastifyReply, FastifyRequest } from "fastify";
 import { sqlCon } from "../../common/config/kysely-config";
+import { sendEmail } from "../../common/config/mailer-config";
+import { logger } from "../../common/config/pino-plugin";
 import { HttpStatusCode } from "../../common/enum/http-status-code";
-import { sendEmail } from "../../common/utils/email"; // Утилита для отправки email
 import * as todoRepository from "../todo/repository.todo";
 import type { createSchema } from "../todo/schemas/create.schema";
 import { editSchema, paramsSchema } from "../todo/schemas/edit.schema";
@@ -66,7 +67,7 @@ export async function grantAccess(req: FastifyRequest<{ Body: grantParamSchema; 
             html: `<p>Вам был предоставлен доступ к заметке с ID: <strong>${req.params.id}</strong>.</p>`
         });
     } catch (error) {
-        console.error("Failed to send email:", error);
+        logger.error("Failed to send email:", error);
     }
 
     return rep.code(HttpStatusCode.OK).send(data);
